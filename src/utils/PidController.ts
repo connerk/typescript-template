@@ -1,13 +1,40 @@
 "use strict";
 
+type Options = {
+	k_p: number,
+	k_i: number,
+	k_d: number,
+	dt: number,
+	i_max: number
+};
+type numberOrOptions = number | Options;
+
 /**
  *  PID Controller.
+ * @constructor
+ * @param {number} [k_p=1] - proportional gain
+ * @param {number} [k_i=0] - integral gain
+ * @param {number} [k_d=0] - derivative gain
+ * @param {number} [dt] - loop interval time
+ * @param {number} [i_max=Infinity] - maximum allowable integral windup
+ * 
  */
-class Controller {
-	constructor(k_p, k_i, k_d, dt) {
+export class PidController {
+	k_p: number;
+	k_i: number;
+	k_d: number;
+	dt: number;
+	i_max: number;
+	sumError: number;
+	lastError: number;
+	lastTime: number;
+	target: number;
+	currentValue: number | undefined;
+	
+	constructor(k_p: numberOrOptions, k_i: number, k_d: number, dt: number) {
 		let i_max;
 		if (typeof k_p === 'object') {
-			let options = k_p;
+			const options: Options = k_p;
 			k_p = options.k_p;
 			k_i = options.k_i;
 			k_d = options.k_d;
@@ -34,18 +61,18 @@ class Controller {
 		this.target = 0; // default value, can be modified with .setTarget
 	}
 
-	setTarget(target) {
+	setTarget(target: number) {
 		this.target = target;
 	}
 
-	update(currentValue) {
+	update(currentValue: number) {
 		if (!currentValue) throw new Error("Invalid argument");
 		this.currentValue = currentValue;
 
 		// Calculate dt
 		let dt = this.dt;
 		if (!dt) {
-			let currentTime = Date.now();
+			const currentTime: number = Date.now();
 			if (this.lastTime === 0) { // First time update() is called
 				dt = 0;
 			} else {
@@ -57,14 +84,14 @@ class Controller {
 			dt = 1;
 		}
 
-		let error = (this.target - this.currentValue);
+		const error = (this.target - this.currentValue);
 		this.sumError = this.sumError + error * dt;
 		if (this.i_max > 0 && Math.abs(this.sumError) > this.i_max) {
-			let sumSign = (this.sumError > 0) ? 1 : -1;
+			const sumSign = (this.sumError > 0) ? 1 : -1;
 			this.sumError = sumSign * this.i_max;
 		}
 
-		let dError = (error - this.lastError) / dt;
+		const dError = (error - this.lastError) / dt;
 		this.lastError = error;
 
 		return (this.k_p * error) + (this.k_i * this.sumError) + (this.k_d * dError);
@@ -76,5 +103,3 @@ class Controller {
 		this.lastTime = 0;
 	}
 }
-
-export default Controller;
