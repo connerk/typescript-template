@@ -1,6 +1,5 @@
 let stockSymbols
 let corpus
-let underperformingShares
 const commission = 100000
 
 function localeHHMMSS(ms = 0) {

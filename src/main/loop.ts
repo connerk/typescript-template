@@ -1,16 +1,13 @@
-import { NS } from '@ns'
-import { runIf } from '/utils/index'
+import { NS } from '@ns';
+import { settings } from '/common';
 
-const settings = {
-	delay: 5000
-}
-
-export async function main(ns: NS): Promise<void> {
-	runIf(ns, 'custom-HUD-v2.js')
-	while(true){
-		if (ns.gang.inGang()) runIf(ns, 'gang/loop.js')
-		ns.run('actions/buyTorHackPrograms.js')
-
-		await ns.sleep(settings.delay)
-	}
-}
+export const main = async (ns: NS): Promise<void> => {
+  try {
+    while (true) {
+      ns.run('main/actions.js');
+      await ns.sleep(settings.delay);
+    }
+  } catch (e) {
+    ns.tprint(`[ERROR] ${e}`);
+  }
+};

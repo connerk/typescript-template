@@ -39,12 +39,6 @@ export async function main(ns) {
 
   const scriptToRunAfter = ns.args[0]
 
-  let hostname = ns.getHostname()
-
-  if (hostname !== 'home') {
-    throw new Exception('Run the script from home')
-  }
-
   const serverMap = getItem(settings.keys.serverMap)
 
   if (!serverMap || serverMap.lastUpdate < new Date().getTime() - settings.mapRefreshInterval) {

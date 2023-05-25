@@ -150,12 +150,6 @@ function findTargetServer(ns, serversList, servers, serverExtraData) {
 }
 
 export async function main(ns) {
-  let hostname = ns.getHostname()
-
-  if (hostname !== 'home') {
-    throw new Exception('Run the script from home')
-  }
-
   ns.tprint(`[${localeHHMMSS()}] Starting mainHack.js`)
 
   while (true) {
@@ -176,7 +170,7 @@ export async function main(ns) {
 
     const targetServers = findTargetServer(ns, vulnerableServers, serverMap.servers, serverExtraData)
     const bestTarget = targetServers.shift()
-    
+
     const hackTime = ns.getHackTime(bestTarget)
     const growTime = ns.getGrowTime(bestTarget)
     const weakenTime = ns.getWeakenTime(bestTarget)
@@ -223,7 +217,7 @@ export async function main(ns) {
     // ns.tprint(`[${localeHHMMSS()}] Delays: ${convertMSToHHMMSS(hackDelay)} for hacks, ${convertMSToHHMMSS(growDelay)} for grows`)
 
     // ns.exec('startHacknet.js', 'home', 1, 0, 33)
-    
+
     if (action === 'weaken') {
       if (settings.changes.weaken * weakenCycles > securityLevel - serverMap.servers[bestTarget].minSecurityLevel) {
         weakenCycles = Math.ceil((securityLevel - serverMap.servers[bestTarget].minSecurityLevel) / settings.changes.weaken)

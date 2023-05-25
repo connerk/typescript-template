@@ -2,105 +2,120 @@ const settings = {
   keys: {
     serverMap: 'BB_SERVER_MAP',
   },
-}
+};
 
 function getItem(key) {
-  let item = localStorage.getItem(key)
+  let item = localStorage.getItem(key);
 
-  return item ? JSON.parse(item) : undefined
+  return item ? JSON.parse(item) : undefined;
 }
 
 function localeHHMMSS(ms = 0) {
   if (!ms) {
-    ms = new Date().getTime()
+    ms = new Date().getTime();
   }
 
-  return new Date(ms).toLocaleTimeString()
+  return new Date(ms).toLocaleTimeString();
 }
 
 function pathToServer(servers, serverToFind) {
-  if (serverToFind === 'home') return 'home'
-  if (!servers[serverToFind]) return `-- Unable to locate ${serverToFind} --`
+  if (serverToFind === 'home') return 'home';
+  if (!servers[serverToFind]) return `-- Unable to locate ${serverToFind} --`;
 
-  const jumps = []
+  const jumps = [];
 
-  let isParentHome = servers.parent === 'home'
-  let currentServer = serverToFind
+  let isParentHome = servers.parent === 'home';
+  let currentServer = serverToFind;
 
   while (!isParentHome) {
-    jumps.push(servers[currentServer].parent)
+    jumps.push(servers[currentServer].parent);
 
     if (servers[currentServer].parent !== 'home') {
-      currentServer = servers[currentServer].parent
+      currentServer = servers[currentServer].parent;
     } else {
-      isParentHome = true
+      isParentHome = true;
     }
   }
 
-  jumps.unshift(serverToFind)
-  return jumps
+  jumps.unshift(serverToFind);
+  return jumps;
 }
 
-function printPathToServer(jumps){
-  if(!Array.isArray(jumps)) return jumps
-  return jumps.reverse().join('; connect ')
+function printPathToServer(jumps) {
+  if (!Array.isArray(jumps)) return jumps;
+  return jumps.reverse().join('; connect ');
 }
 
 export async function main(ns) {
-  ns.tprint(`[${localeHHMMSS()}] Starting find.js`)
+  ns.tprint(`[${localeHHMMSS()}] Starting find.js`);
 
-  const serverToFind = ns.args[0]
+  const serverToFind = ns.args[0];
 
-  let hostname = ns.getHostname()
-
-  if (hostname !== 'home') {
-    throw new Exception('Run the script from home')
-  }
-
-  const serverMap = getItem(settings.keys.serverMap)
+  const serverMap = getItem(settings.keys.serverMap);
 
   if (serverToFind) {
     if (Object.keys(serverMap.servers).includes(serverToFind)) {
-      const path = pathToServer(serverMap.servers, serverToFind)
-      ns.tprint(`[${localeHHMMSS()}] Path to ${serverToFind} found:`)
-      return path
+      const path = pathToServer(serverMap.servers, serverToFind);
+      ns.tprint(`[${localeHHMMSS()}] Path to ${serverToFind} found:`);
+      return path;
     } else {
-      ns.tprint(`[${localeHHMMSS()}] Unable to find the path to ${serverToFind}`)
-      return undefined
+      ns.tprint(
+        `[${localeHHMMSS()}] Unable to find the path to ${serverToFind}`
+      );
+      return undefined;
     }
   } else {
-    ns.tprint(`[${localeHHMMSS()}] Common servers:`)
-    ns.tprint(`* CSEC (CyberSec faction)`)
-    ns.tprint(printPathToServer(pathToServer(serverMap.servers, 'CSEC')) + '; backdoor;')
-    ns.tprint('')
-    ns.tprint(`* avmnite-02h (NiteSec faction)`)
-    ns.tprint(printPathToServer(pathToServer(serverMap.servers, 'avmnite-02h')) + '; backdoor;')
-    ns.tprint('')
-    ns.tprint(`* I.I.I.I (The Black Hand faction)`)
-    ns.tprint(printPathToServer(pathToServer(serverMap.servers, 'I.I.I.I')) + '; backdoor;')
-    ns.tprint('')
-    ns.tprint(`* run4theh111z (Bitrunners faction)`)
-    ns.tprint(printPathToServer(pathToServer(serverMap.servers, 'run4theh111z')) + '; backdoor;')
-    ns.tprint('')
-    ns.tprint(`* w0r1d_d43m0n`)
-    ns.tprint(printPathToServer(pathToServer(serverMap.servers, 'w0r1d_d43m0n')) + '; backdoor;')
-    ns.tprint('')
-    ns.tprint(`[${localeHHMMSS()}] Looking for servers with coding contracts:`)
+    ns.tprint(`[${localeHHMMSS()}] Common servers:`);
+    ns.tprint('* CSEC (CyberSec faction)');
+    ns.tprint(
+      printPathToServer(pathToServer(serverMap.servers, 'CSEC')) + '; backdoor;'
+    );
+    ns.tprint('');
+    ns.tprint('* avmnite-02h (NiteSec faction)');
+    ns.tprint(
+      printPathToServer(pathToServer(serverMap.servers, 'avmnite-02h')) +
+        '; backdoor;'
+    );
+    ns.tprint('');
+    ns.tprint('* I.I.I.I (The Black Hand faction)');
+    ns.tprint(
+      printPathToServer(pathToServer(serverMap.servers, 'I.I.I.I')) +
+        '; backdoor;'
+    );
+    ns.tprint('');
+    ns.tprint('* run4theh111z (Bitrunners faction)');
+    ns.tprint(
+      printPathToServer(pathToServer(serverMap.servers, 'run4theh111z')) +
+        '; backdoor;'
+    );
+    ns.tprint('');
+    ns.tprint('* w0r1d_d43m0n');
+    ns.tprint(
+      printPathToServer(pathToServer(serverMap.servers, 'w0r1d_d43m0n')) +
+        '; backdoor;'
+    );
+    ns.tprint('');
+    ns.tprint(`[${localeHHMMSS()}] Looking for servers with coding contracts:`);
     Object.keys(serverMap.servers).forEach((hostname) => {
-      const files = ns.ls(hostname)
+      const files = ns.ls(hostname);
       if (files && files.length) {
-        const contract = files.find((file) => file.includes('.cct'))
+        const contract = files.find((file) => file.includes('.cct'));
 
-        if (!!contract) {
-          ns.tprint('')
-          ns.tprint(`* ${hostname} has a coding contract(s)! Connect using:`)
-          ns.tprint(printPathToServer(pathToServer(serverMap.servers, hostname)) + `; run ${contract};`)
+        if (contract) {
+          ns.tprint('');
+          ns.tprint(`* ${hostname} has a coding contract(s)! Connect using:`);
+          ns.tprint(
+            printPathToServer(pathToServer(serverMap.servers, hostname)) +
+              `; run ${contract};`
+          );
         }
       }
-    })
-    ns.tprint('')
-    ns.tprint('Buy all hacks command:')
-    ns.tprint('home; connect darkweb; buy BruteSSH.exe; buy FTPCrack.exe; buy relaySMTP.exe; buy HTTPWorm.exe; buy SQLInject.exe; home;')
-    ns.tprint('')
+    });
+    ns.tprint('');
+    ns.tprint('Buy all hacks command:');
+    ns.tprint(
+      'home; connect darkweb; buy BruteSSH.exe; buy FTPCrack.exe; buy relaySMTP.exe; buy HTTPWorm.exe; buy SQLInject.exe; home;'
+    );
+    ns.tprint('');
   }
 }

@@ -1,0 +1,9 @@
+import { NS } from '@ns';
+import { runIf } from '/utils/index';
+
+export const main = async (ns: NS): Promise<void> => {
+  runIf(ns, 'custom-HUD-v2.js');
+  if (ns.gang.inGang()) runIf(ns, 'gang/loop.js');
+  if (ns.corporation.hasCorporation()) runIf(ns, 'corporation/loop.js');
+  ns.run('actions/buyTorHackPrograms.js');
+};
