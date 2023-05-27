@@ -1,3 +1,5 @@
+import { NS } from '@ns';
+
 export type ServerMap = {
   servers: {
     [hostname: string]: Server;
@@ -19,3 +21,15 @@ export type Server = {
   children: string[];
   files: string[];
 };
+
+export interface NSA extends NS {
+  heart: {
+    break(): number;
+  };
+  openDevMenu(): void;
+  exploit(): void;
+  bypass(doc: Document): void;
+  alterReality(): void;
+  rainbow(guess: string): void;
+  iKnowWhatImDoing(): void;
+}

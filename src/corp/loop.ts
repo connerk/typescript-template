@@ -1,13 +1,10 @@
 import { NS } from '@ns';
-import { PidController } from '/utils/PidController.js';
+import { localeHHMMSS, settings } from '/common';
 
 export async function main(ns: NS) {
-  const { corporation: corp } = ns;
-  const test = new PidController(1, 1, 1, 1);
-
-  test.setTarget(15);
-
-  const constants = corp.hasCorporation();
-
-  ns.tprint(constants);
+  ns.tprint(`[${localeHHMMSS()}] Starting Corporations`);
+  while (true) {
+    ns.run('corp/actions.js');
+    await ns.sleep(settings.delay);
+  }
 }
