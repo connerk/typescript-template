@@ -1,4 +1,4 @@
-import { settings, setItem, localeHHMMSS, hackPrograms, PERSONAL_SERVER_PREFIX } from '/common.js';
+import { settings, setItem, localeHHMMSS, hackPrograms } from '/common.js';
 import { NS } from '@ns';
 import { ServerMap } from '/types';
 
@@ -98,7 +98,7 @@ export async function main(ns: NS) {
         server.children = server.children ? server.children : [];
       }
 
-      if (hostname.includes(PERSONAL_SERVER_PREFIX)) {
+      if (hostname.includes(settings.playerServers.PLAYER_SERVER_PREFIX)) {
         server.parent = 'home';
         server.children = [];
 

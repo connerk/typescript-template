@@ -7,6 +7,7 @@ export const settings = {
   maxHacknetNodes: 30,
   mapRefreshInterval: 24 * 60 * 60 * 1000,
   playerServers: {
+    PLAYER_SERVER_PREFIX: 'pserv-',
     maxPlayerServers: 25,
     gbRamCost: 55000,
     maxGbRam: 1048576,
@@ -25,9 +26,11 @@ export const settings = {
   delay: 5000,
   reserveMoney: 0,
   ascendThreshold: 1.1,
+  corporation: {
+    ENERGY_THRESHOLD: 0.9,
+    MORALE_THRESHOLD: 0.9,
+  },
 };
-
-export const PERSONAL_SERVER_PREFIX = 'pserv-';
 
 export const hackPrograms = [
   'BruteSSH.exe',

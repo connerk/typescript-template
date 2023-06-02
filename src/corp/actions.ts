@@ -1,4 +1,5 @@
 import { NS } from '@ns';
+import { settings } from '/common';
 
 const ENERGY_THRESHOLD = 0.9;
 const MORALE_THRESHOLD = 0.9;

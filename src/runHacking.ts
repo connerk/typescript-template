@@ -1,12 +1,8 @@
-function localeHHMMSS(ms = 0) {
-  if (!ms) {
-    ms = new Date().getTime();
-  }
+import { NS } from '@ns';
+import { localeHHMMSS } from './common';
+import { Player } from './types';
 
-  return new Date(ms).toLocaleTimeString();
-}
-
-export async function main(ns) {
+export async function main(ns: NS) {
   ns.tprint(`[${localeHHMMSS()}] Starting runHacking.js`);
 
   const homeRam = ns.getServerMaxRam('home');
@@ -15,7 +11,7 @@ export async function main(ns) {
     ns.tprint(`[${localeHHMMSS()}] Spawning spider.js`);
     await ns.run('spider.js', 1, 'playerServers.js');
 
-    let player = ns.getPlayer();
+    const player: Player = ns.getPlayer();
     if (player.hasTixApiAccess) {
       ns.tprint(`[${localeHHMMSS()}] Player has Tix API Access`);
       try {

@@ -11,4 +11,8 @@ export const main = async (ns: NS): Promise<void> => {
   if (ns.gang.inGang()) runIf(ns, 'gang/loop.js');
   if (ns.corporation.hasCorporation()) runIf(ns, 'corp/loop.js');
   ns.run('actions/buyTorHackPrograms.js');
+
+  if (ns.singularity) {
+    ns.run('actions/backdoorEverything.js', { preventDuplicates: true });
+  }
 };

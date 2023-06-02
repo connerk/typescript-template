@@ -1,4 +1,4 @@
-import { NS } from '@ns';
+import { NS, Player as NSPlayer } from '@ns';
 
 export type ServerMap = {
   servers: {
@@ -21,6 +21,16 @@ export type Server = {
   children: string[];
   files: string[];
 };
+
+export type Servers = {
+  [hostname: string]: Server;
+};
+
+export interface Player extends NSPlayer {
+  has4SDataTixApi?: boolean;
+  hasTixApiAccess?: boolean;
+  has4SDataStockMarket?: boolean;
+}
 
 export interface NSA extends NS {
   heart: {

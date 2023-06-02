@@ -1,30 +1,17 @@
-const settings = {
-  keys: {
-    serverMap: 'BB_SERVER_MAP',
-  },
-};
+import { NS } from '@ns';
+import { settings, localeHHMMSS, getItem } from '/common';
+import { Servers } from '/types';
 
-function getItem(key) {
-  let item = localStorage.getItem(key);
-
-  return item ? JSON.parse(item) : undefined;
-}
-
-function localeHHMMSS(ms = 0) {
-  if (!ms) {
-    ms = new Date().getTime();
-  }
-
-  return new Date(ms).toLocaleTimeString();
-}
-
-function pathToServer(servers, serverToFind) {
-  if (serverToFind === 'home') return 'home';
-  if (!servers[serverToFind]) return `-- Unable to locate ${serverToFind} --`;
+export const pathToServer = (
+  servers: Servers,
+  serverToFind: string
+): string[] => {
+  if (serverToFind === 'home') return ['home'];
+  if (!servers[serverToFind]) return [`-- Unable to locate ${serverToFind} --`];
 
   const jumps = [];
 
-  let isParentHome = servers.parent === 'home';
+  let isParentHome = false;
   let currentServer = serverToFind;
 
   while (!isParentHome) {
@@ -39,30 +26,30 @@ function pathToServer(servers, serverToFind) {
 
   jumps.unshift(serverToFind);
   return jumps;
-}
+};
 
-function printPathToServer(jumps) {
-  if (!Array.isArray(jumps)) return jumps;
+function printPathToServer(jumps: string[]): string {
+  if (jumps.length === 1) return jumps[0];
   return jumps.reverse().join('; connect ');
 }
 
-export async function main(ns) {
+export async function main(ns: NS): Promise<void> {
   ns.tprint(`[${localeHHMMSS()}] Starting find.js`);
-
-  const serverToFind = ns.args[0];
+  const serverToFind: string = ns.args[0] as string;
 
   const serverMap = getItem(settings.keys.serverMap);
 
   if (serverToFind) {
     if (Object.keys(serverMap.servers).includes(serverToFind)) {
-      const path = pathToServer(serverMap.servers, serverToFind);
-      ns.tprint(`[${localeHHMMSS()}] Path to ${serverToFind} found:`);
-      return path;
+      const jumps = pathToServer(serverMap.servers, serverToFind);
+      const path = printPathToServer(jumps);
+      ns.tprint(`[${localeHHMMSS()}] Path to ${serverToFind} found: \n${path}`);
+      return;
     } else {
       ns.tprint(
         `[${localeHHMMSS()}] Unable to find the path to ${serverToFind}`
       );
-      return undefined;
+      return;
     }
   } else {
     ns.tprint(`[${localeHHMMSS()}] Common servers:`);
@@ -99,7 +86,7 @@ export async function main(ns) {
     Object.keys(serverMap.servers).forEach((hostname) => {
       const files = ns.ls(hostname);
       if (files && files.length) {
-        const contract = files.find((file) => file.includes('.cct'));
+        const contract = files.find((file: string) => file.includes('.cct'));
 
         if (contract) {
           ns.tprint('');

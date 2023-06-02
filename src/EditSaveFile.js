@@ -1,13 +1,13 @@
 function getDB() {
   return new Promise((resolve, reject) => {
     if (!window.indexedDB) {
-      reject("Indexed DB does not exists");
+      reject('Indexed DB does not exists');
     }
-    const indexedDbRequest = window.indexedDB.open("bitburnerSave", 1);
+    const indexedDbRequest = window.indexedDB.open('bitburnerSave', 1);
 
     indexedDbRequest.onupgradeneeded = function () {
       const db = indexedDbRequest.result;
-      db.createObjectStore("savestring");
+      db.createObjectStore('savestring');
     };
 
     indexedDbRequest.onerror = function (ev) {
@@ -17,10 +17,12 @@ function getDB() {
     indexedDbRequest.onsuccess = function () {
       const db = indexedDbRequest.result;
       if (!db) {
-        reject("database loadign result was undefined");
+        reject('database loadign result was undefined');
         return;
       }
-      resolve(db.transaction(["savestring"], "readwrite").objectStore("savestring"));
+      resolve(
+        db.transaction(['savestring'], 'readwrite').objectStore('savestring')
+      );
     };
   });
 }
@@ -30,9 +32,9 @@ function load() {
     getDB()
       .then((db) => {
         return new Promise((resolve, reject) => {
-          const request = db.get("save");
+          const request = db.get('save');
           request.onerror = function (ev) {
-            reject("Error in Database request to get savestring: " + ev);
+            reject('Error in Database request to get savestring: ' + ev);
           };
 
           request.onsuccess = function () {
@@ -47,10 +49,10 @@ function load() {
 function save(saveString) {
   return getDB().then((db) => {
     return new Promise((resolve, reject) => {
-      const request = db.put(saveString, "save");
+      const request = db.put(saveString, 'save');
 
       request.onerror = function (e) {
-        reject("Error saving game to IndexedDB: " + e);
+        reject('Error saving game to IndexedDB: ' + e);
       };
 
       request.onsuccess = () => resolve();
@@ -60,12 +62,12 @@ function save(saveString) {
 
 /** @param {NS} ns **/
 export async function main(ns) {
-    let saveStr = decodeURIComponent(escape(atob(await load())));
-    ns.tprint(saveStr);
+  let saveStr = decodeURIComponent(escape(atob(await load())));
+  ns.tprint(saveStr);
 
-    // saveStr = saveStr.replace('\\"exploits\\":[', '\\"exploits\\":[\\"EditSaveFile\\",');
-    // saveStr = saveStr.replace('\\"exploits\\":[\\"EditSaveFile\\",', '\\"exploits\\":[\\"EditSaveFile\\",\\"INeedARainbow\\",');
+  // saveStr = saveStr.replace('\\"exploits\\":[', '\\"exploits\\":[\\"EditSaveFile\\",');
+  // saveStr = saveStr.replace('\\"exploits\\":[\\"EditSaveFile\\",', '\\"exploits\\":[\\"EditSaveFile\\",\\"INeedARainbow\\",');
 
-    saveStr = btoa(unescape(encodeURIComponent(saveStr)));
-    await save(saveStr);
+  saveStr = btoa(unescape(encodeURIComponent(saveStr)));
+  await save(saveStr);
 }

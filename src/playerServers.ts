@@ -1,12 +1,5 @@
 import { NS } from '@ns';
-import {
-  settings,
-  setItem,
-  getItem,
-  localeHHMMSS,
-  createUUID,
-  PERSONAL_SERVER_PREFIX,
-} from '/common';
+import { settings, setItem, getItem, localeHHMMSS, createUUID } from '/common';
 import { ServerMap } from '/types';
 
 function updateServer(ns: NS, serverMap: ServerMap, host: string) {
@@ -100,7 +93,9 @@ export async function main(ns: NS) {
           settings.playerServers.totalMoneyAllocation >=
         targetRam * settings.playerServers.gbRamCost
       ) {
-        let hostname = `${PERSONAL_SERVER_PREFIX}${targetRam}-${createUUID()}`;
+        let hostname = `${
+          settings.playerServers.PLAYER_SERVER_PREFIX
+        }${targetRam}-${createUUID()}`;
         hostname = ns.purchaseServer(hostname, targetRam);
 
         if (hostname) {
@@ -152,7 +147,9 @@ export async function main(ns: NS) {
                 settings.playerServers.totalMoneyAllocation >=
               targetRam * settings.playerServers.gbRamCost
             ) {
-              let hostname = `${PERSONAL_SERVER_PREFIX}${targetRam}-${createUUID()}`;
+              let hostname = `${
+                settings.playerServers.PLAYER_SERVER_PREFIX
+              }${targetRam}-${createUUID()}`;
 
               await ns.killall(purchasedServers[0]);
               await ns.sleep(10);
