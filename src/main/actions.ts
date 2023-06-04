@@ -14,5 +14,6 @@ export const main = async (ns: NS): Promise<void> => {
 
   if (ns.singularity) {
     ns.run('actions/backdoorEverything.js', { preventDuplicates: true });
+    ns.run('actions/joinFactions.js', { preventDuplicates: true });
   }
 };

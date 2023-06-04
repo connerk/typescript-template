@@ -1,5 +1,6 @@
 import { NS } from '@ns';
 import { settings, getItem } from '/common';
+import { navigateToServer } from '/actions/navigateToServer';
 
 export const main = async (ns: NS): Promise<void> => {
   const { singularity: s } = ns;
@@ -53,15 +54,19 @@ export const main = async (ns: NS): Promise<void> => {
       ns.getServer(hostname).hasAdminRights &&
       ns.getServer(hostname).openPortCount! >= numOpenPortsRequired!
     ) {
-      ns.exec(
-        'actions/navigateToServer.js',
-        'home',
-        { threads: 1 },
-        hostname
-        );
+      // ns.exec('actions/navigateToServer.js', 'home', { threads: 1 }, hostname);
+      navigateToServer(ns, hostname);
+      while (!ns.getServer(hostname).isConnectedTo) {
+        ns.tprint(`Connecting to ${hostname}`);
+        await ns.sleep(1000);
+      }
       await s.installBackdoor();
-      if (ns.getServer(hostname).backdoorInstalled)
-        ns.tprint(`Installed backdoor on ${hostname}`);
+      ns.tprint(`Installing backdoor on ${hostname}`);
+      while (!ns.getServer(hostname).backdoorInstalled) {
+        ns.tprint(`backdoor in progress on ${hostname}`);
+        await ns.sleep(1000);
+      }
+      ns.tprint(`Installed backdoor on ${hostname} successfully`);
     }
   }
   s.connect('home');

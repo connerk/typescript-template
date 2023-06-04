@@ -15,10 +15,13 @@ export const main = async (ns: NS): Promise<void> => {
     return;
   }
 
+  navigateToServer(ns, server);
+};
+
+export const navigateToServer = (ns: NS, server: string): void => {
+  const { singularity } = ns;
   const serverMap = getItem(settings.keys.serverMap);
-
   const jumps = pathToServer(serverMap.servers, server).reverse();
-
   for (const j in jumps) {
     singularity.connect(jumps[j]);
   }
