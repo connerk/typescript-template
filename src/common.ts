@@ -30,6 +30,17 @@ export const settings = {
     ENERGY_THRESHOLD: 0.9,
     MORALE_THRESHOLD: 0.9,
   },
+  homeRamReserved: 32,
+  homeRamReservedBase: 32,
+  homeRamExtraRamReserved: 12,
+  homeRamBigMode: 64,
+  maxWeakenTime: 30 * 60 * 1000,
+  delayAdditionalMS: 200,
+  changes: {
+    hack: 0.002,
+    grow: 0.004,
+    weaken: 0.05,
+  },
 };
 
 export const hackPrograms = [

@@ -48,25 +48,14 @@ export const main = async (ns: NS): Promise<void> => {
         ns.sqlinject(hostname);
     }
 
-    ns.nuke(hostname);
+    if (ns.getServer(hostname).openPortCount! >= numOpenPortsRequired!)
+      ns.nuke(hostname);
 
-    if (
-      ns.getServer(hostname).hasAdminRights &&
-      ns.getServer(hostname).openPortCount! >= numOpenPortsRequired!
-    ) {
-      // ns.exec('actions/navigateToServer.js', 'home', { threads: 1 }, hostname);
+    if (ns.getServer(hostname).hasAdminRights) {
       navigateToServer(ns, hostname);
-      while (!ns.getServer(hostname).isConnectedTo) {
-        ns.tprint(`Connecting to ${hostname}`);
-        await ns.sleep(1000);
-      }
+      ns.tprint(`Installing ${hostname} backdoor`);
       await s.installBackdoor();
-      ns.tprint(`Installing backdoor on ${hostname}`);
-      while (!ns.getServer(hostname).backdoorInstalled) {
-        ns.tprint(`backdoor in progress on ${hostname}`);
-        await ns.sleep(1000);
-      }
-      ns.tprint(`Installed backdoor on ${hostname} successfully`);
+      ns.tprint(`${hostname} Success`);
     }
   }
   s.connect('home');
